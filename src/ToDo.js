@@ -1,5 +1,5 @@
 import { Component } from "react";
-
+import "./ToDo.css";
 
 class ToDo extends Component {
   constructor(props) {
@@ -7,6 +7,7 @@ class ToDo extends Component {
     this.state = {
       todos: [],
       newTodo: "",
+      error: "",
     };
   }
 
@@ -18,17 +19,33 @@ class ToDo extends Component {
     event.preventDefault();
     const text = this.state.newTodo.trim();
     if (!text) {
+      this.setState({ error: "Todo cannot be empty!" });
       return;
     }
 
     const newTodo = {
       id: Date.now(),
       text,
+      completed: false,
     };
 
     this.setState((prev) => ({
       todos: [...prev.todos, newTodo],
       newTodo: "",
+      error: "",
+    }));
+  };
+
+  handleToggle = (id) => {
+    this.setState((prev) => ({
+      todos: prev.todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      ),
+    }));
+  };
+
+  render() {
+    const { todos, newTodo, error } = this.state;
     }));
   };
   
@@ -40,12 +57,28 @@ class ToDo extends Component {
         <form onSubmit={this.handleAdd}>
           <input
             type="text"
+
+            className={`${error ? "input-error" : ""}`}
             placeholder="Add Your Todo..."
             value={newTodo}
             onChange={this.handleChange}
           />
           <button type="submit">Add</button>
         </form>
+        {error}
+        <div className="div">
+          <ul>
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                className={`todo-item ${todo.completed ? "completed" : ""}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => this.handleToggle(todo.id)}
+                />
+                <span>{todo.text}</span>
         <div>
           <ul>
             {todos.map((todo) => (

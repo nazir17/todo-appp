@@ -1,4 +1,10 @@
-.todo-item.completed{
+.todo-item.completed span{
     text-decoration: line-through;
     color: #999;
+}
+.div ul{
+    list-style: none;
+}
+.input-error {
+  border-color: #e63946;
 }
