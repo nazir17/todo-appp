@@ -1,4 +1,5 @@
 import { Component } from "react";
+import './ToDo.css';
 
 class ToDo extends Component {
   constructor(props) {
@@ -56,7 +57,10 @@ class ToDo extends Component {
         <div>
           <ul>
             {todos.map((todo) => (
-              <li key={todo.id}>
+              <li 
+              key={todo.id}
+              className={`todo-item ${todo.completed ? "completed" : ""}`}
+              >
                 <input
                   type="checkbox"
                   checked={todo.completed}
