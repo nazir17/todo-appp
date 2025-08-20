@@ -44,6 +44,12 @@ class ToDo extends Component {
     }));
   };
 
+  handleDelete = (id) => {
+    this.setState((prev) => ({
+      todos: prev.todos.filter((todo) => todo.id !== id),
+    }));
+  };
+
   render() {
     const { todos, newTodo, error } = this.state;
     }));
@@ -79,6 +85,11 @@ class ToDo extends Component {
                   onChange={() => this.handleToggle(todo.id)}
                 />
                 <span>{todo.text}</span>
+                <button
+                    onClick={() => this.handleDelete(todo.id)}
+                  >
+                    Delete
+                  </button>
         <div>
           <ul>
             {todos.map((todo) => (
