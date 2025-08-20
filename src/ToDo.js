@@ -46,12 +46,18 @@ class ToDo extends Component {
 
   render() {
     const { todos, newTodo, error } = this.state;
+    }));
+  };
+  
+  render() {
+    const { todos, newTodo } = this.state;
     return (
       <div>
         <h1>Todo App</h1>
         <form onSubmit={this.handleAdd}>
           <input
             type="text"
+
             className={`${error ? "input-error" : ""}`}
             placeholder="Add Your Todo..."
             value={newTodo}
@@ -73,6 +79,12 @@ class ToDo extends Component {
                   onChange={() => this.handleToggle(todo.id)}
                 />
                 <span>{todo.text}</span>
+        <div>
+          <ul>
+            {todos.map((todo) => (
+
+              <li key={todo.id}>
+                {todo.text}
               </li>
             ))}
           </ul>
