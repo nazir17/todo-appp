@@ -1,5 +1,5 @@
 import { Component } from "react";
-import './ToDo.css';
+
 
 class ToDo extends Component {
   constructor(props) {
@@ -31,15 +31,7 @@ class ToDo extends Component {
       newTodo: "",
     }));
   };
-
-  handleToggle = (id) => {
-    this.setState((prev) => ({
-      todos: prev.todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      ),
-    }));
-  };
-
+  
   render() {
     const { todos, newTodo } = this.state;
     return (
@@ -57,15 +49,8 @@ class ToDo extends Component {
         <div>
           <ul>
             {todos.map((todo) => (
-              <li 
-              key={todo.id}
-              className={`todo-item ${todo.completed ? "completed" : ""}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => this.handleToggle(todo.id)}
-                />
+
+              <li key={todo.id}>
                 {todo.text}
               </li>
             ))}
