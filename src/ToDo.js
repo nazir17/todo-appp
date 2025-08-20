@@ -50,6 +50,30 @@ class ToDo extends Component {
     }));
   };
 
+  handleEdit = (id) => {
+    this.setState((prev) => ({
+      todos: prev.todos.map((todo) =>
+        todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
+      ),
+    }));
+  };
+
+  handleEditChange = (id, newText) => {
+    this.setState((prev) => ({
+      todos: prev.todos.map((todo) =>
+        todo.id === id ? { ...todo, text: newText } : todo
+      ),
+    }));
+  };
+
+  handleEditSave = (id) => {
+    this.setState((prev) => ({
+      todos: prev.todos.map((todo) =>
+        todo.id === id ? { ...todo, isEditing: false } : todo
+      ),
+    }));
+  };
+
   render() {
     const { todos, newTodo, error } = this.state;
     return (
@@ -78,12 +102,29 @@ class ToDo extends Component {
                   checked={todo.completed}
                   onChange={() => this.handleToggle(todo.id)}
                 />
-                <span>{todo.text}</span>
-                <button
-                    onClick={() => this.handleDelete(todo.id)}
-                  >
-                    Delete
+                {todo.isEditing ? (
+                  <input
+                    type="text"
+                    value={todo.text}
+                    onChange={(e) =>
+                      this.handleEditChange(todo.id, e.target.value)
+                    }
+                  />
+                ) : (
+                  <>
+                    <span>{todo.text}</span>
+                  </>
+                )}
+                {todo.isEditing ? (
+                  <button onClick={() => this.handleEditSave(todo.id)}>
+                    Save
                   </button>
+                ) : (
+                  <button onClick={() => this.handleEdit(todo.id)}>Edit</button>
+                )}
+                <button onClick={() => this.handleDelete(todo.id)}>
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
