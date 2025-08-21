@@ -24,7 +24,7 @@ class ToDo extends Component {
     event.preventDefault();
     const text = this.state.newTodo.trim();
     const deadline = this.state.newDeadline;
-
+    
     if (!text) {
       this.setState({ error: "Todo cannot be empty!" });
       return;
@@ -88,7 +88,6 @@ class ToDo extends Component {
 
     const now = new Date();
     const deadlineDate = new Date(deadline);
-
     const diffTime = deadlineDate - now;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -100,7 +99,6 @@ class ToDo extends Component {
       return `Deadline in ${diffDays} day(s)`;
     }
   };
-
   render() {
     const { todos, newTodo, error, newDeadline } = this.state;
     return (
@@ -145,6 +143,7 @@ class ToDo extends Component {
                 ) : (
                   <>
                     <span>{todo.text}</span>
+
                     {todo.deadline && (
                       <small>{this.getDeadlineStatus(todo.deadline)}</small>
                     )}
