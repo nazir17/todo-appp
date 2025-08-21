@@ -8,6 +8,7 @@ class ToDo extends Component {
       todos: [],
       newTodo: "",
       error: "",
+      newDeadline: "",
     };
   }
 
@@ -15,9 +16,15 @@ class ToDo extends Component {
     this.setState({ newTodo: event.target.value });
   };
 
+  handleDeadlineChange = (event) => {
+    this.setState({ newDeadline: event.target.value });
+  };
+
   handleAdd = (event) => {
     event.preventDefault();
     const text = this.state.newTodo.trim();
+    const deadline = this.state.newDeadline;
+
     if (!text) {
       this.setState({ error: "Todo cannot be empty!" });
       return;
@@ -27,12 +34,14 @@ class ToDo extends Component {
       id: Date.now(),
       text,
       completed: false,
+      deadline: deadline || null,
     };
 
     this.setState((prev) => ({
       todos: [...prev.todos, newTodo],
       newTodo: "",
       error: "",
+      newDeadline: "",
     }));
   };
 
@@ -74,8 +83,26 @@ class ToDo extends Component {
     }));
   };
 
+  getDeadlineStatus = (deadline) => {
+    if (!deadline) return null;
+
+    const now = new Date();
+    const deadlineDate = new Date(deadline);
+
+    const diffTime = deadlineDate - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffTime < 0) {
+      return `Deadline Expired ${Math.abs(diffDays)} day(s) ago`;
+    } else if (diffDays === 0) {
+      return "Deadline Today";
+    } else {
+      return `Deadline in ${diffDays} day(s)`;
+    }
+  };
+
   render() {
-    const { todos, newTodo, error } = this.state;
+    const { todos, newTodo, error, newDeadline } = this.state;
     return (
       <div>
         <h1>Todo App</h1>
@@ -86,6 +113,11 @@ class ToDo extends Component {
             placeholder="Add Your Todo..."
             value={newTodo}
             onChange={this.handleChange}
+          />
+          <input
+            type="date"
+            value={newDeadline}
+            onChange={this.handleDeadlineChange}
           />
           <button type="submit">Add</button>
         </form>
@@ -113,6 +145,9 @@ class ToDo extends Component {
                 ) : (
                   <>
                     <span>{todo.text}</span>
+                    {todo.deadline && (
+                      <small>{this.getDeadlineStatus(todo.deadline)}</small>
+                    )}
                   </>
                 )}
                 {todo.isEditing ? (
