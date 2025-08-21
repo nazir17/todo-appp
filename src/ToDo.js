@@ -1,5 +1,6 @@
 import { Component } from "react";
 import "./ToDo.css";
+import deleteImage from "./images/delete.svg";
 
 class ToDo extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class ToDo extends Component {
     event.preventDefault();
     const text = this.state.newTodo.trim();
     const deadline = this.state.newDeadline;
-    
+
     if (!text) {
       this.setState({ error: "Todo cannot be empty!" });
       return;
@@ -88,6 +89,7 @@ class ToDo extends Component {
 
     const now = new Date();
     const deadlineDate = new Date(deadline);
+
     const diffTime = deadlineDate - now;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -99,66 +101,93 @@ class ToDo extends Component {
       return `Deadline in ${diffDays} day(s)`;
     }
   };
+
   render() {
     const { todos, newTodo, error, newDeadline } = this.state;
     return (
-      <div>
-        <h1>Todo App</h1>
-        <form onSubmit={this.handleAdd}>
+      <div className="todo-app">
+        <form onSubmit={this.handleAdd} className="todo-form">
           <input
             type="text"
-            className={`${error ? "input-error" : ""}`}
-            placeholder="Add Your Todo..."
+            className={`todo-input ${error ? "input-error" : ""}`}
+            placeholder="What needs to be done?"
             value={newTodo}
             onChange={this.handleChange}
           />
           <input
             type="date"
+            className="deadline-input"
             value={newDeadline}
             onChange={this.handleDeadlineChange}
           />
-          <button type="submit">Add</button>
+          <button type="submit" className="add-btn">
+            Add Task
+          </button>
         </form>
-        {error}
-        <div className="div">
-          <ul>
+        {error && <p className="error-text">{error}</p>}
+        <div className="todo-list-container">
+          <ul className="todo-list">
             {todos.map((todo) => (
               <li
                 key={todo.id}
                 className={`todo-item ${todo.completed ? "completed" : ""}`}
               >
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => this.handleToggle(todo.id)}
-                />
-                {todo.isEditing ? (
+                <div className="todo-left">
                   <input
-                    type="text"
-                    value={todo.text}
-                    onChange={(e) =>
-                      this.handleEditChange(todo.id, e.target.value)
-                    }
+                    type="checkbox"
+                    className="todo-checkbox"
+                    checked={todo.completed}
+                    onChange={() => this.handleToggle(todo.id)}
                   />
-                ) : (
-                  <>
-                    <span>{todo.text}</span>
+                  {todo.isEditing ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={todo.text}
+                      onChange={(e) =>
+                        this.handleEditChange(todo.id, e.target.value)
+                      }
+                    />
+                  ) : (
+                    <span className="todo-text">{todo.text}</span>
+                  )}
+                </div>
 
-                    {todo.deadline && (
-                      <small>{this.getDeadlineStatus(todo.deadline)}</small>
-                    )}
-                  </>
-                )}
-                {todo.isEditing ? (
-                  <button onClick={() => this.handleEditSave(todo.id)}>
-                    Save
+                <div className="todo-center">
+                  {todo.deadline && (
+                    <small className="deadline-text">
+                      {this.getDeadlineStatus(todo.deadline)}
+                    </small>
+                  )}
+                </div>
+
+                <div className="todo-right">
+                  {todo.isEditing ? (
+                    <button
+                      className="save-btn"
+                      onClick={() => this.handleEditSave(todo.id)}
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      className="edit-btn"
+                      onClick={() => this.handleEdit(todo.id)}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    className="delete-btn"
+                    onClick={() => this.handleDelete(todo.id)}
+                  >
+                    <img
+                      src={deleteImage}
+                      alt="delete-icon"
+                      className="delete-image"
+                    />
                   </button>
-                ) : (
-                  <button onClick={() => this.handleEdit(todo.id)}>Edit</button>
-                )}
-                <button onClick={() => this.handleDelete(todo.id)}>
-                  Delete
-                </button>
+                </div>
               </li>
             ))}
           </ul>
