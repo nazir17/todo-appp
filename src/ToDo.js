@@ -10,6 +10,7 @@ class ToDo extends Component {
       newTodo: "",
       error: "",
       newDeadline: "",
+      filter: "all",
     };
   }
 
@@ -84,6 +85,10 @@ class ToDo extends Component {
     }));
   };
 
+  setFilter = (filter) => {
+    this.setState({ filter });
+  };
+
   getDeadlineStatus = (deadline) => {
     if (!deadline) return null;
 
@@ -103,7 +108,16 @@ class ToDo extends Component {
   };
 
   render() {
-    const { todos, newTodo, error, newDeadline } = this.state;
+    const { todos, newTodo, error, newDeadline, filter } = this.state;
+
+    const filteredTodos = todos.filter((todo) => {
+      if (filter === "active") return !todo.completed;
+      if (filter === "completed") return todo.completed;
+      return true;
+    });
+
+    const itemsLeft = todos.filter((todo) => !todo.completed).length;
+
     return (
       <div className="todo-app">
         <form onSubmit={this.handleAdd} className="todo-form">
@@ -127,7 +141,7 @@ class ToDo extends Component {
         {error && <p className="error-text">{error}</p>}
         <div className="todo-list-container">
           <ul className="todo-list">
-            {todos.map((todo) => (
+            {filteredTodos.map((todo) => (
               <li
                 key={todo.id}
                 className={`todo-item ${todo.completed ? "completed" : ""}`}
@@ -192,6 +206,31 @@ class ToDo extends Component {
             ))}
           </ul>
         </div>
+        {todos.length > 0 && (
+          <div className="todo-footer">
+            <span>items left: {itemsLeft}</span>
+            <div className="filters">
+              <button
+                onClick={() => this.setFilter("all")}
+                className={filter === "all" ? "active" : ""}
+              >
+                All
+              </button>
+              <button
+                onClick={() => this.setFilter("active")}
+                className={filter === "active" ? "active" : ""}
+              >
+                Active
+              </button>
+              <button
+                onClick={() => this.setFilter("completed")}
+                className={filter === "completed" ? "active" : ""}
+              >
+                Completed
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
