@@ -3,12 +3,15 @@ body {
   padding: 0;
   font-family: Arial, sans-serif;
 }
+
 .todo-app {
+  position: sticky;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: #f5f5f5;
 }
+
 form {
   display: flex;
   justify-content: center;
@@ -152,6 +155,7 @@ ul {
   font-weight: bold;
   color: #555;
 }
+
 .filters button.active {
   color: #1a73e8;
 }
@@ -159,6 +163,7 @@ ul {
 .filters button:hover {
   color: #0c5ed7;
 }
+
 .todo-footer {
   position: fixed;
   bottom: 0;
@@ -173,4 +178,56 @@ ul {
   align-items: center;
   padding: 12px 16px;
   font-size: 14px;
+}
+
+@media (max-width: 820px) {
+  .todo-list-container {
+    padding: 10px;
+  }
+
+  .todo-footer {
+    width: 100%;
+    left: 0;
+    transform: none;
+    border-radius: 0;
+  }
+
+  .todo-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  form input[type="text"] {
+    width: 97.4%;
+  }
+
+  form input[type="date"] {
+    width: 97.4%;
+  }
+}
+
+@media (max-width: 500px) {
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .todo-footer {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  form input[type="text"] {
+    width: 95.8%;
+  }
+
+  form input[type="date"] {
+    width: 95.8%;
+  }
 }

@@ -14,6 +14,19 @@ class ToDo extends Component {
     };
   }
 
+  componentDidMount() {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      this.setState({ todos: JSON.parse(savedTodos) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.todos !== this.state.todos) {
+      localStorage.setItem("todos", JSON.stringify(this.state.todos));
+    }
+  }
+
   handleChange = (event) => {
     this.setState({ newTodo: event.target.value });
   };
@@ -116,28 +129,28 @@ class ToDo extends Component {
       return true;
     });
 
-    const itemsLeft = todos.filter((todo) => !todo.completed).length;
-
     return (
       <div className="todo-app">
-        <form onSubmit={this.handleAdd} className="todo-form">
-          <input
-            type="text"
-            className={`todo-input ${error ? "input-error" : ""}`}
-            placeholder="What needs to be done?"
-            value={newTodo}
-            onChange={this.handleChange}
-          />
-          <input
-            type="date"
-            className="deadline-input"
-            value={newDeadline}
-            onChange={this.handleDeadlineChange}
-          />
-          <button type="submit" className="add-btn">
-            Add Task
-          </button>
-        </form>
+        <div className="header">
+          <form onSubmit={this.handleAdd} className="todo-form">
+            <input
+              type="text"
+              className={`todo-input ${error ? "input-error" : ""}`}
+              placeholder="What needs to be done?"
+              value={newTodo}
+              onChange={this.handleChange}
+            />
+            <input
+              type="date"
+              className="deadline-input"
+              value={newDeadline}
+              onChange={this.handleDeadlineChange}
+            />
+            <button type="submit" className="add-btn">
+              Add Task
+            </button>
+          </form>
+        </div>
         {error && <p className="error-text">{error}</p>}
         <div className="todo-list-container">
           <ul className="todo-list">
@@ -206,31 +219,30 @@ class ToDo extends Component {
             ))}
           </ul>
         </div>
-        {todos.length > 0 && (
-          <div className="todo-footer">
-            <span>items left: {itemsLeft}</span>
-            <div className="filters">
-              <button
-                onClick={() => this.setFilter("all")}
-                className={filter === "all" ? "active" : ""}
-              >
-                All
-              </button>
-              <button
-                onClick={() => this.setFilter("active")}
-                className={filter === "active" ? "active" : ""}
-              >
-                Active
-              </button>
-              <button
-                onClick={() => this.setFilter("completed")}
-                className={filter === "completed" ? "active" : ""}
-              >
-                Completed
-              </button>
-            </div>
+
+        <div className="todo-footer">
+          <span>items left: {todos.filter((t) => !t.completed).length}</span>
+          <div className="filters">
+            <button
+              className={filter === "all" ? "active" : ""}
+              onClick={() => this.setFilter("all")}
+            >
+              All
+            </button>
+            <button
+              className={filter === "active" ? "active" : ""}
+              onClick={() => this.setFilter("active")}
+            >
+              Active
+            </button>
+            <button
+              className={filter === "completed" ? "active" : ""}
+              onClick={() => this.setFilter("completed")}
+            >
+              Completed
+            </button>
           </div>
-        )}
+        </div>
       </div>
     );
   }
